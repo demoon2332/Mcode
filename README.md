@@ -68,3 +68,27 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+# Notice:
+
+1. npx create-react-app mcode --use-npm --> maybe require install create-react-app module
+2. npm install react-router-dom,....
+3. create folder structure
+4. npm install --save @fortawesome/fontawesome-svg-core
+5. npm install --save @fortawesome/free-solid-svg-icons
+6. npm install --save @fortawesome/react-fontawesome
+7. npm install --save jwt-decode --> decode jwt at client, reduce server's effort
+8. npm audit fix --force
+9. npm install --save react-cookie (16:43 20/11/2023) --> then call npm audit fix --force (be careful with this --force option)
+10. after call audit fix --force, project go crazy :< when npm start --> delete node_modules --> run npm install
+    ) npm start
+11. npm install i18next react-i18next
+12. npm install react-select --save
+
+- sau khi đăng nhập thì đã đồng bộ ở các tab, tuy nhiên sau khi hết 1p hơn tí (do set expiration time của token là 1 phút)
+  thì bật tab thứ 2, access token và refresh token mất hết.
+  --> vấn đề trên đã đc giải quyết, chỉ là ở file useRefreshToken, nếu truy cập tới cái biến auth, setAuth, login thì sẽ bị null, nên
+  hiện tại tốt nhất nên để useRefreshToken làm việc độc lập 1 tí
+  - vì dùng cả accessToken (lưu ở local) và refreshToken lưu ở cookies (nên có thể việc useRefreshToken sẽ đc làm độc lập)
+    --> cân nhắc nên để useRefreshToken tự truy cập tới storage, cookies lấy hay pass qa từ auth provider , hmmmm
+  - !!! NHớ set http only cho cookie để tăng bảo mật, hạn chế người dùng truy cập vào cookie trực tiếp qa Javascript

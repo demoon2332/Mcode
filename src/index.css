@@ -5,9 +5,133 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-image: var(--theme);
+  background-size: cover;
+  object-fit: scale-down;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+:root {
+  --theme: url('./assets/images/App/Theme/background.png');
+  --navbarHeight: 80px;
+  --mainColor: rgb(87, 122, 56);
+  --mainColorLight: rgb(32, 120, 20);
+  --mainColorDark: rgb(21, 80, 13);
+  --secondaryColor: rgb(58, 245, 108);
+  --thirdColor: rgba(255, 194, 48, 1);
+  --textColor: #fff;
+  
+  --successColor: rgb(32, 120, 20);
+  --successColorLight: rgb(82, 199, 82);
+  --dangerColor: rgb(191, 46, 46);
+  --dangerColorLight: rgb(192, 75, 75);
+  --warningColor: orange;
+  --warningColorLight: rgb(253, 189, 71);
+  --cancelColor: rgb(173, 170, 170);
+  --grayColor: rgb(114, 113, 113); 
+  --darkColor: #222;
+}
+
+/* let btn in main.css of login folder --> be primary btn */
+
+.btn {
+  width: fit-content;
+    appearance: button;
+    background-color: orange;
+    border: solid transparent;
+    border-radius: 16px;
+    border-width: 0 0 4px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: din-round,sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    line-height: 20px;
+    margin: 12px 0px 0px 0px;
+    outline: none;
+    overflow: visible;
+    padding: 13px 16px;
+    text-align: center;
+    text-transform: uppercase;
+    touch-action: manipulation;
+    transform: translateZ(0);
+    transition: filter .2s;
+    user-select: none;
+    -webkit-user-select: none;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  
+  .btn:after {
+    background-clip: padding-box;
+    background-color: var(--thirdColor);
+    border: solid transparent;
+    border-radius: 16px;
+    border-width: 0 0 4px;
+    bottom: -4px;
+    content: "";
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: -1;
+  }
+  
+  .btn:main,
+  .btn:focus {
+    user-select: auto;
+  }
+  
+  .btn:hover:not(:disabled) {
+    filter: brightness(1.1);
+    -webkit-filter: brightness(1.1);
+  }
+  
+  .btn:disabled:after {
+    cursor: auto;
+    background: var(--cancelColor);
+  }
+  
+  .btn:active {
+    border-width: 4px 0 0;
+    background: none;
+  }
+
+  .primary-btn {
+    background-color: orange;
+  }
+  .primary-btn:after{
+    background-color: var(--thirdColor);
+  }
+
+  .secondary-btn {
+    background-color: var(--grayColor);
+  }
+  .secondary-btn:after {
+    background-color: var(--cancelColor) !important;
+  }
+  
+  .success-btn {
+    background-color: var(--successColor);
+  }
+  .success-btn:after{
+    background-color: var(--successColorLight);
+  }
+
+  .danger-btn{
+    background-color: var(--dangerColor);
+  }
+  .danger-btn:after{
+    background-color: var(--dangerColorLight);
+  }
+
+/* TEST 
+ */
+ 
