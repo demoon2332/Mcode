@@ -40,7 +40,7 @@ const Register = () => {
   const [birthFocus, setBirthFocus] = useState(false);
 
   // gender
-  const [gender, setGender] = useState("");
+  const [gender, setGender] = useState(0);
   const [validGender, setValidGender] = useState(false);
   const [genderFocus, setGenderFocus] = useState(false);
 
@@ -81,7 +81,7 @@ const Register = () => {
   }, [name]);
 
   useEffect(() => {
-    const validGenders = ["male", "female", "other"];
+    const validGenders = [0,1,2];
     setValidGender(validGenders.includes(gender));
   }, [gender]);
 
@@ -140,7 +140,7 @@ const Register = () => {
       //clear state and controlled inputs
       setName("");
       setBirth("");
-      setGender("");
+      setGender(0);
       setUser("");
       setPwd("");
       setMatchPwd("");
@@ -217,11 +217,12 @@ const Register = () => {
         </div>
 
         {success ? (
-          <div className="register-section-body">
+          <div className="register-section-body fade-appear-animation ">
             <div className="register-congratulation">
-              <div className="rc-image">
+              <div className="rc-image move-down-appear-animation" style={{position: 'absolute',top: '-100px',left: '0px'}}>
                 <img src={rcImage}></img>
               </div>
+              <div></div>
               <div className="rc-content">
                 <h2>CHÚC MỪNG BẠN ĐÃ TẠO TÀI KHOẢN THÀNH CÔNG !</h2>
                 <small>
@@ -234,6 +235,7 @@ const Register = () => {
                   {" "}
                   <button
                     className="btn secondary-btn "
+                    onClick={()=>{setSuccess(false)}}
                     style={{ marginLeft: "30px" }}
                   >
                     QUAY LẠI ĐĂNG KÝ
@@ -361,7 +363,7 @@ const Register = () => {
                     id="gender"
                     ref={userRef}
                     value={gender}
-                    onChange={(e) => setGender(e.target.value)}
+                    onChange={(e) => setGender(parseInt(e.target.value))}
                     required
                     aria-invalid={validGender ? "false" : "true"}
                     aria-describedby="genderNote"
@@ -371,9 +373,9 @@ const Register = () => {
                     <option value="" disabled hidden>
                       Chọn giới tính
                     </option>
-                    <option value="male">Nam</option>
-                    <option value="female">Nữ</option>
-                    <option value="other">Khác</option>
+                    <option value={0}>Nam</option>
+                    <option value={1}>Nữ</option>
+                    <option value={2}>Khác</option>
                   </select>
                   <p
                     id="genderNote"

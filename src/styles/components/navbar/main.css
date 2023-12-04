@@ -23,6 +23,10 @@ header {
     color: var(--textColor);
 }
 
+header a {
+    color: var(--thirdColor);
+}
+
 nav a {
     margin: 0 2rem;
     color: var(--mainColor);
@@ -67,7 +71,7 @@ header .nav-btn {
 }
 
 header .responsive_navbar {
-    z-index: 99;
+    z-index: 10;
 }
 
 @media only screen and (max-width: 1024px){

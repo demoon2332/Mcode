@@ -10,7 +10,6 @@ import { useTranslation } from "react-i18next";
 
 // import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import "../../styles/components/Login/main.css";
-import "../../index.css"
 
 // images
 import bgInside from "../../assets/images/Login/background_inside.png";
@@ -19,7 +18,7 @@ import bgInside from "../../assets/images/Login/background_inside.png";
 const LOGIN_URL = "/auth/login";
 
 const Login = () => {
-  const {t, i18n} = useTranslation();
+  const {t} = useTranslation();
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -77,7 +76,8 @@ const Login = () => {
       } else if (err.response?.status === 400) {
         setErrMsg("Missing Username or Password");
       } else if (err.response?.status === 401) {
-        setErrMsg("Unauthorized");
+        console.log("err is: ",err.message);
+        setErrMsg(err.response.data.message);
       } else {
         setErrMsg("Login Failed");
       }

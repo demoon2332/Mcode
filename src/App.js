@@ -19,6 +19,7 @@ import Account from "./pages/account/Account";
 import Admin from "./pages/admin/Admin";
 import Reset from "./components/Reset/Reset";
 
+
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
@@ -42,7 +43,7 @@ i18n.use(initReactI18next).init({
 
 const ROLES = {
   User: 2001,
-  Editor: 1975,
+  Editor: 1905,
   Admin: 4420,
 };
 
@@ -95,11 +96,12 @@ function App() {
         >
           <Route path="/news" element={<News />} />
         </Route>
-        <Route
+        {/* <Route
           element={<RequireAuth allowedRoles={[ROLES.User, ROLES.Admin]} />}
         >
           <Route path="/account" element={<Account />} />
-        </Route>
+        </Route> */}
+        <Route path="/account" element={<Account />}></Route>
 
         {/* <Route element={<RequireAuth allowedRoles={[ROLES.Editor]} />}>
             <Route path="editor" element={<Editor />} />

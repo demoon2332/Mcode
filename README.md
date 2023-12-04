@@ -92,3 +92,12 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
   - vì dùng cả accessToken (lưu ở local) và refreshToken lưu ở cookies (nên có thể việc useRefreshToken sẽ đc làm độc lập)
     --> cân nhắc nên để useRefreshToken tự truy cập tới storage, cookies lấy hay pass qa từ auth provider , hmmmm
   - !!! NHớ set http only cho cookie để tăng bảo mật, hạn chế người dùng truy cập vào cookie trực tiếp qa Javascript
+  - 26/11 bắt đầu làm giao diện cho trang homes, sau khi trang homes ổn rồi thì nên quay lại code phía server tí
+  - sau khi code bên server xong --> tiến hành tìm hiểu blockly
+  - sửa lại phần pwdnote, uidnote trong file style của file styles của Register --> đưa về 1 class note chung. File instructions và offscreen nữa (04/12/2023)
+  - Còn lại là kiểm tra note check các input, check xong thì test gửi api này nọ là oke
+  - Thêm phần check mở hidden email, phone, squest --> bắt nhập mk rồi mới cho xem
+  - set thêm en.json và vi.json cho trường hợp unknown/unset bên trang account.js và các trường hợp khác nữa
+  - fetch city.json đưa vào select cho chỗ chọn thành phố/tỉnh
+  - làm mấy cái useEffect, onChange cho những field input còn lại (04/12/2023)
+  - cái fetch data của city.json oke r , còn 1 chút dưới phần school,grade và hiện tại chưa làm vụ post dữ liệu lên server nhá (04/12/2023)

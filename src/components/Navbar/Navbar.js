@@ -7,7 +7,7 @@ import styles from "../../styles/components/navbar/main.css";
 
 const ROLES = {
   User: 2001,
-  Editor: 1975,
+  Editor: 1905,
   Admin: 4420,
 };
 

@@ -7,8 +7,16 @@
     "tutorial":"Tutorial",
     "about":"About us",
     "admin":"Admin",
+    "account":"Account",
+    "loading":"Loading",
+    "did_you_know":"Did you know",
+    "select_language":"Chose a language",
     "welcome_back":"Welcome back",
     "welcome_to_app":"Welcome to Mcode",
+    "start_now":"Start now",
+    "watch_video":"Watch Video",
+    "home_title":"learn as playing, play as learning",
+    "home_description":"Provide children with a friendly and enjoyable learning environment",
     "get_back_home":"Get back to home page",
     "ask_account":"Did you have an account ?",
     "register_link":"Register now",
@@ -24,6 +32,8 @@
     "password":"Password",
     "confirm_password":"Confirm password",
     "finish":"Done",
-    "show_password":"Show password"
+    "show_password":"Show password",
+    "not_found_description":"We couldn't find the page you wanted"
+
 
 }

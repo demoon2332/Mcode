@@ -7,8 +7,16 @@
     "tutorial":"Hướng dẫn",
     "about":"Về chúng tôi",
     "admin":"Admin",
+    "account":"Account",
+    "loading":"Đang tải",
+    "did_you_know":"Có thể bạn chưa biết",
+    "select_language":"Chọn ngôn ngữ",
     "welcome_back":"Chào mừng",
     "welcome_to_app":"Chào mừng tới Mcode",
+    "start_now":"Bắt đầu ngay",
+    "watch_video":"Xem Video",
+    "home_title":"học mà chơi, chơi mà học",
+    "home_description":"Provide children with a friendly and enjoyable learning environment",
     "get_back_home":"Quay lại trang chủ",
     "ask_account":"Bạn chưa có tài khoản sao ?",
     "register_link":"Đăng ký ngay",
@@ -24,6 +32,7 @@
     "password":"Mật khẩu",
     "confirm_password":"Nhập lại mật khẩu",
     "finish":"Hoàn thành",
-    "show_password":"Hiện mật khẩu"
+    "show_password":"Hiện mật khẩu",
+    "not_found_description":"Chúng tôi không thể tìm thấy trang bạn muốn"
 
 }

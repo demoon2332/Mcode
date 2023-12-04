@@ -1,0 +1,157 @@
+#account-page-section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.account-page-container {
+    background-color: #E6E6E6;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 75%;
+    border-radius: 50px;
+    padding: 25px 40px;
+}
+.accPage-header{
+    color: var(--mainColor);
+    font-weight: bold;
+}
+
+.accPage-body {
+    display: flex;
+    padding: 20px 30px;
+    gap: 20px;
+    width: 100%;
+}
+
+.accPage-b-left {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.accPage-b-left div {
+    display: flex;
+    gap: 10px;
+    font-weight: bold;
+    align-items: center;
+    border-radius: 10px;
+    padding: 10px 30px 10px 12px;
+    color: var(--cancelColor);
+}
+
+.accPage-b-left div.active{
+    color: var(--mainColorLight);
+    background-color: var(--mainColorLightFaded);
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+.accPage-b-right {
+    width: 75%;
+    gap: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.accPage-br-header {
+    padding: 20px 30px;
+    border-radius: 15px;
+    border: solid 1px var(--cancelColor);
+    display: flex;
+    gap: 20px;
+}
+
+.accPage-br-header .circle-avatar{
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 100%;
+    transition: 0.5s;
+}
+.accPage-br-header .circle-avatar:hover{
+    transform: scale(1.1);
+}
+
+.profile-part{
+    border-radius: 15px;
+    border: solid 1px var(--cancelColor);
+}
+.security-part{
+    
+}
+
+.security-part .container{
+    padding: 20px 30px;
+    border-radius: 15px;
+    border: solid 1px var(--cancelColor);
+}
+
+
+.form-update-profile {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.form-update-profile input {
+    /* font-size: larger; */
+    color: var(--mainColor);
+    width: 20vw;
+    margin: 10px 0px;
+    padding: 12px 20px;
+    border-radius: 20px;
+    border: 1px solid transparent;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    background: rgba(230,230,230,0.8);
+    outline: none;
+}
+.form-update-profile select {
+    width: 20vw;
+}
+
+.form-update-profile label{
+    font-weight: bold;
+}
+
+.f-u-p-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 40px;
+}
+
+.f-update-ph-left{
+    display: flex;
+    flex-direction: column;
+}
+
+.f-update-ph-right {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.f-update-p-bottom{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
+.accPage-body .tab-active {
+    transform: scale(1.1);
+    color: var(--mainColorLight);
+    background-color: var(--mainColorLightFaded);
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.apb-profile, .apb-security {
+    transition: 1s;
+    cursor: pointer;
+
+}
+
+/* use in case when user didn't click to edit information yet --> display information as text only not input */
+.uneditable-input { 
+    padding: 8px 12px 12px 15px;
+    min-width: 15vw;
+}
