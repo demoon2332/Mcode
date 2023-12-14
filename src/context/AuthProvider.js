@@ -17,7 +17,7 @@ export function checkTokenExpiration(token) {
 
 export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({});
-  const [cookies, setCookie, removeCookie] = useCookies(["mcode_token"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
 
   const login = (data) => {
     const decodedToken = jwtDecode(data.accessToken);
@@ -29,7 +29,13 @@ export const AuthProvider = ({ children }) => {
 
     // set refreshToken into cookie
     if(data.refreshToken)
-      setCookie("refreshToken", data.refreshToken, {httpOnly: true, secure: true, path: "/", maxAge: 604800 });
+      {
+        // setCookie("refreshToken", data.refreshToken, {httpOnly: true, secure: true, path: "/", maxAge: 604800 });
+        setCookie("refreshToken", data.refreshToken, {path: "/"});
+
+      }
+      console.log("Sau khi lưu có cookie ko nè")
+      console.log(cookies.refreshToken)
       // 604800 seconds is a week  
   };
 

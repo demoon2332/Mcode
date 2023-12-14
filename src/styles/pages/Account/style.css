@@ -67,7 +67,16 @@
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     border-radius: 100%;
     transition: 0.5s;
+    width: 50px;
+    height: 50px;
 }
+
+.accPage-br-header .circle-avatar img {
+    border-radius: 100%;
+    width: 50px;
+    height: 50px;
+}
+
 .accPage-br-header .circle-avatar:hover{
     transform: scale(1.1);
 }
@@ -116,7 +125,6 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    gap: 40px;
 }
 
 .f-update-ph-left{
@@ -130,7 +138,7 @@
 
 }
 
-.f-update-p-bottom{
+.f-u-p-bottom{
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -149,9 +157,43 @@
     cursor: pointer;
 
 }
+.security-part {
+    display: flex;
+    flex-direction: row;
+    gap: 22px;
+    justify-content: space-between;
+}
 
 /* use in case when user didn't click to edit information yet --> display information as text only not input */
 .uneditable-input { 
     padding: 8px 12px 12px 15px;
     min-width: 15vw;
 }
+
+/* RESPONSIVE */
+@media only screen and (max-width: 1024px) {
+    .account-page-container{
+        width: 95%;
+    }
+    .accPage-body{
+        flex-direction: column;
+    }
+    .accPage-b-right {
+        width: 100%;
+    }
+    .f-u-p-header, .f-u-p-bottom{
+        flex-direction: column;
+    }
+    .f-u-p-bottom div {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .form-update-profile input, .form-update-profile select {
+        width: 50vw;
+    }
+    .security-part{
+        flex-direction: column;
+    }
+    
+  }

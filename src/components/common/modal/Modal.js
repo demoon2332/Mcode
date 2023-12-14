@@ -1,47 +1,45 @@
-import { useEffect } from "react";
-import { useRef } from "react";
-import { useState } from "react";
+// Modal.js
+
+import React, { useRef, useState } from "react";
 import "../../../styles/components/common/modal/index.css";
 
-// standard modal
-const Modal = ({ setOpen, title, children, onYes, onNo, onClose }) => {
-  const [isVisible, setIsVisible] = useState(true);
+const Modal = ({ title, isVisible, children, onYes, onNo, onClose, setIsVisible }) => {
   const modalRef = useRef(null);
+
 
   const clickOnClose = () => {
     setIsVisible(false);
-    // onClose();
+    if (onClose) onClose();
   };
 
   const clickNo = () => {
     setIsVisible(false);
-    // onNo();
+    if (onNo) onNo();
   };
 
   const clickYes = () => {
     setIsVisible(false);
-    // onYes();
+    if (onYes) onYes();
   };
 
   return (
-    <div
-      ref={modalRef}
-      className={`modal-container  ${isVisible ? "" : "hidden"}`}
-    >
-      <div className="modal">
+    <div ref={modalRef} className={`modal-container ${isVisible ? "" : "modal-container-hidden"}`}>
+      <div className={`modal  ${isVisible ? "modal-visible" : "modal-hidden"}`}>
         <div className="modal-header">
-          {title} Modal 1 Title
-          <button className="close-btn" onClick={clickOnClose}></button>
+          {title ? title : "Modal Title"} 
+          <button className="circle-close-btn" onClick={clickOnClose}></button>
         </div>
 
-        <div className="modal-content">{children}This content is empty, please try again
+        {/* Pass the setModalVisibility function to children */}
+        <div className="modal-content">
+          {children ? children : "Content is empty "}
         </div>
 
         <div className="modal-footer">
-          <button className="modal-btn no-btn" onClick={onNo}>
+          <button className="btn cancel-btn" onClick={clickNo}>
             Cancel
           </button>
-          <button className="modal-btn yes-btn" onClick={onYes}>
+          <button className="btn success-btn" onClick={clickYes}>
             Continue
           </button>
         </div>

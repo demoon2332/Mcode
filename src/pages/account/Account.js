@@ -12,22 +12,26 @@ import {
   faInfoCircle,
   faEye,
   faEyeSlash,
+  faEdit,
 } from "@fortawesome/free-solid-svg-icons";
+
+import img1 from "../../assets/images/Account/image1.png";
 
 import "../../styles/pages/Account/style.css";
 import { axiosPrivate } from "../../api/axios";
+import { useCookies } from "react-cookie";
 
 const NAME_REGEX = /^[\p{L} ]+(?:[\p{L} ]+){1,}$/u;
 const BIRTH_REGEX =
   /^(19\d\d|20\d\d|2100)-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 // birth regex allow valid date from 1900 to 2100
-const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const PROFILE_URL = "/user/profile";
 const SECURITY_URL = "/user/security";
-const PASS_URL = "/user/changePassword";
+const PWD_URL = "/user/changePassword";
 
 const Account = () => {
+  const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
   const { logout } = useContext(AuthContext);
   const axios = useAxiosPrivate();
   const navigate = useNavigate();
@@ -69,11 +73,13 @@ const Account = () => {
   const [school, setSchool] = useState("");
   const [validSchool, setValidSchool] = useState(false);
   const [schoolFocus, setSchoolFocus] = useState(false);
+  const [schoolsList, setSchoolsList] = useState([]);
 
   // grade
   const [grade, setGrade] = useState("");
   const [validGrade, setValidGrade] = useState(false);
   const [gradeFocus, setGradeFocus] = useState(false);
+  const [gradesList, setGradesList] = useState([]);
 
   // email
   const [email, setEmail] = useState("");
@@ -117,6 +123,11 @@ const Account = () => {
   const [nPasswordShown, setNPasswordShown] = useState(false);
   const [confirmShown, setConfirmShown] = useState(false);
 
+  // modal (modal for updating email,phone, security quest,answer)
+  const [showSQuestModal, setShowSQuestModal] = useState(false);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [showPhoneModal, setShowPhoneModal] = useState(false);
+
   // avatar
   const [image, setImage] = useState("images/default_avatar.png");
 
@@ -149,7 +160,25 @@ const Account = () => {
       .then((data) => {
         setCitiesList(data);
       })
-      .catch((error) => console.error("Error loading cities.json:", error));
+      .catch((error) => console.log("Error loading cities data list :", error));
+
+    fetch("/data/schools.json")
+      .then((response) => response.json())
+      .then((data) => {
+        setSchoolsList(data);
+      })
+      .catch((err) =>
+        console.log("Error when fetching schools data list", err)
+      );
+
+    fetch("/data/grades.json")
+      .then((response) => response.json())
+      .then((data) => {
+        setGradesList(data);
+      })
+      .catch((err) =>
+        console.log("Error when fetching schools data list", err)
+      );
   }, []);
 
   useEffect(() => {
@@ -196,6 +225,14 @@ const Account = () => {
   }, [city]);
 
   useEffect(() => {
+    setValidSchool(schoolsList.some((c) => c.id === school));
+  }, [school]);
+
+  useEffect(() => {
+    setValidGrade(gradesList.some((c) => c.id === grade));
+  }, [grade]);
+
+  useEffect(() => {
     if (BIRTH_REGEX.test(birth)) {
       const inputBirth = new Date(birth);
       const currentDate = new Date();
@@ -226,6 +263,11 @@ const Account = () => {
       setValidBirth(false);
     }
   }, [birth]);
+
+  useEffect(() => {
+    setValidNewPwd(PWD_REGEX.test(newPwd));
+    setValidConfirm(newPwd === confirm);
+  }, [newPwd, confirm]);
 
   useEffect(() => {
     setErrMsg("");
@@ -265,13 +307,22 @@ const Account = () => {
     setPhoneShown(!phoneShown);
   };
 
-  const toggleSQuest = () => {
-    setSQuestShown(!sQuestShown);
-  };
-
   function handleImageChange(e) {
-    console.log("Image: ", e.target.files);
-    if (e.target.files[0]) setImage(URL.createObjectURL(e.target.files[0]));
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImage(reader.result);
+        console.log("Result");
+        console.log(reader.result);
+      };
+      reader.onloadend = () => {
+        setImage(reader.result);
+        console.log("End");
+        console.log(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   const clickLogOut = async () => {
@@ -281,48 +332,111 @@ const Account = () => {
     navigate("/");
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmitProfile = async (e) => {
     e.preventDefault();
-    const fetchData = async () => {
+    setAllowEditProfile(false);
+    const postData = async () => {
       try {
-        const response = await axiosPrivate.get(PROFILE_URL);
-        const data = response.data;
-        setUserData(data);
-        pullData(data);
-        sessionStorage.setItem("mcode_user_data", JSON.stringify(data));
-        console.log(data);
-        console.log("-----------------");
+        const response = await axiosPrivate.post(PROFILE_URL, {
+          full_name: name,
+          birthday: birth,
+          gender: gender,
+          school: school,
+          location: address,
+          grade: grade,
+        });
+        if (response.status == 200) {
+          // remove session --> when left page then return again , page will fetch new updated data
+          sessionStorage.removeItem("mcode_user_data");
+        }
       } catch (err) {
-        console.log("Error fetching user data: ", err);
         setErrMsg(err.message);
       } finally {
         setLoading(false);
       }
     };
-
-    fetchData();
+    postData();
   };
 
   const handleSubmitSecurity = async (e) => {
     e.preventDefault();
+    const postData = async () => {
+      try {
+        const response = await axiosPrivate.post(SECURITY_URL, {
+          email: email,
+          phone: phone,
+        });
+        if (response.status == 200) {
+          // nothing here yet
+        }
+      } catch (err) {
+        setErrMsg(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    postData();
   };
 
-  const handleSubmitResetPassword = async (e) => {
+  const handleSubmitPassword = async (e) => {
     e.preventDefault();
+    const postData = async () => {
+      try {
+        const response = await axiosPrivate.post(PWD_URL, {
+          current_password: cPwd,
+          new_password: newPwd,
+        });
+        if (response.status == 200) {
+          // nothing here yet
+        }
+      } catch (err) {
+        setErrMsg(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    postData();
   };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get("/auth/refresh");
-  //       setUserData(response.data);
-  //     } catch (error) {
-  //       console.log("Error during fetching user data: ", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, [axios]);
+  // modal content html
+  const squestModalContent = (
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <label htmlFor="squest">Security Quest:</label>
+      <select
+        // ref={userRef}
+        id="squest"
+        value={gender}
+        onChange={(e) => setGender(parseInt(e.target.value))}
+        required
+        aria-invalid={validGender ? "false" : "true"}
+        onFocus={() => setGenderFocus(true)}
+        onBlur={() => setGenderFocus(false)}
+      >
+        <option value="" disabled hidden>
+          Chọn giới tính
+        </option>
+        <option value={0}>Nam</option>
+        <option value={1}>Nữ</option>
+        <option value={2}>Khác</option>
+      </select>
+      <label htmlFor="squest">Security Quest:</label>
+      <input
+        type="text"
+        id="name"
+        className="input"
+        // ref={userRef}
+        placeholder="Câu trả lời"
+        autoComplete="off"
+        onChange={(e) => setSQuest(e.target.value)}
+        value={sQuest}
+        required
+        aria-invalid={validSQuest ? "false" : "true"}
+        aria-describedby="sQuestNote"
+        onFocus={() => setSQuestFocus(true)}
+        onBlur={() => setSQuestFocus(false)}
+      />
+    </div>
+  );
 
   if (loading) {
     return <LoadingScreen></LoadingScreen>;
@@ -331,7 +445,10 @@ const Account = () => {
   return (
     <>
       <section id="account-page-section">
-        <div className="account-page-container">
+        <div
+          className="account-page-container"
+          style={{ position: "relative", paddingBottom: "15vh" }}
+        >
           <div className="accPage-header">
             <h2>THÔNG TIN TÀI KHOẢN</h2>
           </div>
@@ -363,6 +480,7 @@ const Account = () => {
                 <div className="circle-avatar">
                   <label style={{ cursor: "pointer" }} htmlFor="image_picker">
                     <img src={image} alt="user_avatar"></img>
+                    {/* add key attribute to force img re-rendering when src change --> due to React won't detect src change to rerender */}
                   </label>
                 </div>
                 <div>
@@ -370,12 +488,13 @@ const Account = () => {
                   <input
                     id="image_picker"
                     type="file"
+                    accept="image/*"
                     style={{
                       textDecoration: "underline",
                       color: "var(--cancelColor)",
                       display: "none",
                     }}
-                    onClick={handleImageChange}
+                    onChange={handleImageChange}
                   />
                   <div
                     style={{
@@ -429,10 +548,10 @@ const Account = () => {
                   <div>
                     <form
                       className="form-update-profile"
-                      onSubmit={handleSubmit}
+                      // onSubmit={handleSubmitProfile}
                     >
                       {/* form 1 */}
-                      <div className="f-u-p-header">
+                      <div className="f-u-p-header"  style={{gap: allowEditProfile && "30px" }}>
                         <div className="f-update-ph-left">
                           <label htmlFor="name">
                             Họ và tên:
@@ -637,7 +756,11 @@ const Account = () => {
                               ))}
                             </select>
                           ) : (
-                            <div className="uneditable-input">{city}</div>
+                            <div className="uneditable-input">
+                              {citiesList.find(
+                                (cityItem) => cityItem.id === city
+                              )?.name ?? "Unknown City"}
+                            </div>
                           )}
                           <p
                             id="cityNote"
@@ -708,7 +831,7 @@ const Account = () => {
                       >
                         Thông tin trường học
                       </h3>
-                      <div className="f-update-p-bottom">
+                      <div className="f-u-p-bottom">
                         <div>
                           <label htmlFor="school">
                             Trường học:
@@ -728,22 +851,47 @@ const Account = () => {
                             )}
                           </label>
                           {allowEditProfile ? (
-                            <input
-                              type="text"
+                            // <input
+                            //   type="text"
+                            //   id="school"
+                            //   // ref={userRef}
+                            //   placeholder="Trường học của bạn"
+                            //   autoComplete="off"
+                            //   onChange={(e) => setSchool(e.target.value)}
+                            //   value={school}
+                            //   required
+                            //   aria-invalid={validSchool ? "false" : "true"}
+                            //   aria-describedby="schoolNote"
+                            //   onFocus={() => setSchoolFocus(true)}
+                            //   onBlur={() => setSchoolFocus(false)}
+                            // />
+                            <select
                               id="school"
                               // ref={userRef}
-                              placeholder="Trường học của bạn"
-                              autoComplete="off"
-                              onChange={(e) => setSchool(e.target.value)}
                               value={school}
+                              onChange={(e) =>
+                                setSchool(parseInt(e.target.value))
+                              }
                               required
                               aria-invalid={validSchool ? "false" : "true"}
                               aria-describedby="schoolNote"
                               onFocus={() => setSchoolFocus(true)}
                               onBlur={() => setSchoolFocus(false)}
-                            />
+                            >
+                              <option value="" disabled hidden>
+                                Chọn trường
+                              </option>
+                              {schoolsList.map((s) => (
+                                <option key={s.id} value={s.id}>
+                                  {s.name}
+                                </option>
+                              ))}
+                            </select>
                           ) : (
-                            <div className="uneditable-input">{school}</div>
+                            <div className="uneditable-input">
+                              {schoolsList.find((item) => item.id === school)
+                                ?.name ?? "Unknown School"}
+                            </div>
                           )}
                           <p
                             id="schoolNote"
@@ -797,12 +945,17 @@ const Account = () => {
                               <option value="" disabled hidden>
                                 Chọn lớp
                               </option>
-                              <option value={0}>1</option>
-                              <option value={1}>2</option>
-                              <option value={2}>3</option>
+                              {gradesList.map((g) => (
+                                <option key={g.id} value={g.id}>
+                                  {g.name}
+                                </option>
+                              ))}
                             </select>
                           ) : (
-                            <div className="uneditable-input">{grade}</div>
+                            <div className="uneditable-input">
+                              {schoolsList.find((item) => item.id === school)
+                                ?.name ?? "Unknown School"}
+                            </div>
                           )}
                           <p
                             id="gradeNote"
@@ -843,7 +996,12 @@ const Account = () => {
                       >
                         Hủy bỏ
                       </button>
-                      <button className="btn success-btn">Lưu lại</button>
+                      <button
+                        onClick={handleSubmitProfile}
+                        className="btn success-btn"
+                      >
+                        Lưu lại
+                      </button>
                     </div>
                   }
                 </div>
@@ -853,12 +1011,6 @@ const Account = () => {
               {showSecurity && (
                 <div
                   className="accPage-br-body security-part"
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    gap: "22px",
-                    justifyContent: "space-between",
-                  }}
                 >
                   <div className="container">
                     <h3
@@ -1018,6 +1170,7 @@ const Account = () => {
                                 value={sQuest}
                                 autoComplete="off"
                                 required
+                                disabled
                                 aria-invalid={validSQuest ? "false" : "true"}
                                 aria-describedby="sQuestNote"
                                 onFocus={() => setSQuestFocus(true)}
@@ -1025,7 +1178,9 @@ const Account = () => {
                               />
                               <div
                                 className="password-toggle-icon"
-                                onClick={toggleSQuest}
+                                onClick={() => {
+                                  setShowSQuestModal(true);
+                                }}
                                 style={{
                                   position: "absolute",
                                   top: "50%",
@@ -1035,9 +1190,7 @@ const Account = () => {
                                   color: "var(--cancelColor)",
                                 }}
                               >
-                                <FontAwesomeIcon
-                                  icon={sQuestShown ? faEye : faEyeSlash}
-                                />
+                                <FontAwesomeIcon icon={faEdit} />
                               </div>
                             </div>
                             {/* <p
@@ -1082,14 +1235,15 @@ const Account = () => {
                     <div>
                       <form
                         className="form-update-profile"
-                        onSubmit={handleSubmitResetPassword}
+                        onSubmit={handleSubmitPassword}
                       >
                         {/* form 1 */}
                         <div className="f-u-p-header">
                           <div className="f-update-ph-left">
                             <label htmlFor="password">
                               Mật khẩu hiện tại:
-                              <FontAwesomeIcon
+                              {/* dont need to check format of old password */}
+                              {/* <FontAwesomeIcon
                                 icon={faCheck}
                                 className={validCPwd ? "valid" : "hide"}
                               />
@@ -1098,7 +1252,7 @@ const Account = () => {
                                 className={
                                   validCPwd || !cPwd ? "hide" : "invalid"
                                 }
-                              />
+                              /> */}
                             </label>
                             <div className="login-password-input-container">
                               <input
@@ -1131,7 +1285,8 @@ const Account = () => {
                                 />
                               </div>
                             </div>
-                            <p
+                            {/* dont need to check format of old password */}
+                            {/* <p
                               id="CPwdNote"
                               className={
                                 CPwdFocus && cPwd && !validCPwd
@@ -1145,7 +1300,7 @@ const Account = () => {
                               A name should begin with a letter.
                               <br />
                               Letters, numbers, underscores, hyphens allowed.
-                            </p>
+                            </p> */}
 
                             <label htmlFor="new_password">
                               Mật khẩu hiện tại:
@@ -1257,7 +1412,7 @@ const Account = () => {
                             <p
                               id="nPwdNote"
                               className={
-                                newPwdFocus && newPwd && !validNewPwd
+                                confirmFocus && confirm && !validConfirm
                                   ? "instructions"
                                   : "offscreen"
                               }
@@ -1265,24 +1420,9 @@ const Account = () => {
                               <FontAwesomeIcon icon={faInfoCircle} />
                               Password and confirm password are not matched.
                             </p>
-
-                            <p
-                              // ref={errRef}
-                              className={errMsg ? "errorMessage" : "offscreen"}
-                              aria-live="assertive"
-                            >
-                              {errMsg}
-                            </p>
                           </div>
                         </div>
                       </form>
-                      <p
-                        // ref={errRef}
-                        className={errMsg ? "errmsg" : "offscreen"}
-                        aria-live="assertive"
-                      >
-                        {errMsg}
-                      </p>
                     </div>
                     <div
                       style={{
@@ -1292,14 +1432,37 @@ const Account = () => {
                         justifyContent: "flex-end",
                       }}
                     >
-                      <button className="btn success-btn">Đổi mật khẩu</button>
+                      <button
+                        onClick={handleSubmitPassword}
+                        className="btn success-btn"
+                      >
+                        Đổi mật khẩu
+                      </button>
                     </div>
                   </div>
                 </div>
               )}
             </div>
           </div>
+
+          <img
+            style={{
+              width: "300px",
+              height: "auto",
+              position: "absolute",
+              bottom: "-100px",
+              left: "-100px",
+            }}
+            src={img1}
+          ></img>
         </div>
+        <Modal
+          isVisible={showSQuestModal}
+          setIsVisible={setShowSQuestModal}
+          title={"Security Quest"}
+        >
+          {squestModalContent}
+        </Modal>
       </section>
     </>
   );

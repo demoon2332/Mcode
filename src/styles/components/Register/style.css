@@ -87,10 +87,6 @@ form {
   pointer-events: none;
 }
 
-a, a:visited {
-    color: #fff;
-}
-
 .register-form label {
   font-weight: bold;
   display: flex;
@@ -160,6 +156,10 @@ a, a:visited {
     display: flex;
     width: 60%;
     justify-content: space-between;
+  }
+  .timeline-container-responsive{
+    display: none;
+    pointer-events: none;
   }
 
   .step-container{
@@ -307,3 +307,22 @@ a, a:visited {
       opacity: 1;
     }
   }
+
+  /* RESPONSIVE */
+  @media only screen and (max-width: 1024px) {
+    .register-section-body{
+      flex-direction: column;
+    }
+    .poster{
+      width: 100%;
+    }
+    .register-form{
+      width: 90%;
+    }
+  .timeline-container {
+    display: none;
+  }
+  .timeline-container-responsive{
+    display: flex;
+  }
+}

@@ -1,8 +1,10 @@
 [
-    "Tiểu học A",
-    "Tiểu học B",
-    "Tiểu học C",
-    "Tiểu học D",
-    "Tiểu học E",
-    "Trung học A"
-]
+    { "id": 0, "name": "Chọn trường học" },
+    { "id": 1, "name": "Tiểu học A" },
+    { "id": 2, "name": "Tiểu học B" },
+    { "id": 3, "name": "Tiểu học C" },
+    { "id": 4, "name": "Tiểu học D" },
+    { "id": 5, "name": "Tiểu học E" },
+    { "id": 6, "name": "Trung học A" }
+  ]
+  

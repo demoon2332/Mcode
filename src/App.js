@@ -1,8 +1,8 @@
 import logo from "./logo.svg";
 import "./App.css";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Navbar from "./components/Navbar/Navbar";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import Register from "./components/Register/Register";
 import MainLayout from "./layouts/main";
 import Login from "./components/Login/Login";
@@ -25,6 +25,8 @@ import { initReactI18next } from "react-i18next";
 
 import enTranslation from "./locales/en.json";
 import viTranslation from "./locales/vi.json";
+import Course from "./pages/course/Course";
+import Exam from "./pages/exam/Exam";
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -49,9 +51,19 @@ const ROLES = {
 
 function App() {
   const { isAuthenticated } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const routeWithNavBar = ['/','/news','/leaderboard','/tutorials','/about'];
+  const [navBarOn, setNavBarOn] = useState(true); 
+
+  useEffect(()=>{
+    setNavBarOn(routeWithNavBar.includes(window.location.pathname));
+    console.log("WINDOW LOCATION HERE: ",window.location.pathname);
+  },[navigate])
+
   return (
     <div>
-      <Navbar />
+      {navBarOn && <Navbar />}
       <Routes>
         <Route
           path="login"
@@ -102,6 +114,9 @@ function App() {
           <Route path="/account" element={<Account />} />
         </Route> */}
         <Route path="/account" element={<Account />}></Route>
+        <Route path="/courses" element={<Course />}></Route>
+        <Route path="/exams/:examId" element={<Exam />}></Route>
+
 
         {/* <Route element={<RequireAuth allowedRoles={[ROLES.Editor]} />}>
             <Route path="editor" element={<Editor />} />

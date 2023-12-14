@@ -260,6 +260,62 @@ const Register = () => {
                 ></img>
               </div>
             </div>
+
+            {/* This a second time-line-container for responsive case */}
+            <div className="timeline-container timeline-container-responsive">
+            {steps?.map((step, i) => (
+              <div
+                key={i}
+                className={`step-item ${currentStep === i + 1 && "active"} ${
+                  (i + 1 < currentStep || complete) && "complete"
+                } `}
+              >
+                <div className="step-container">
+                  {i + 1 < currentStep || complete ? (
+                    <>
+                      <div className="step-progress">
+                        <div className="step">
+                          {complete ? (
+                            <FontAwesomeIcon icon={faCheck} size="lg" />
+                          ) : (
+                            <FontAwesomeIcon icon={faCheck} size="sm" />
+                          )}
+                        </div>
+                        {i < steps.length - 1 && (
+                          <div className="progressBar bar-active"></div>
+                        )}
+                      </div>
+                      {/* <span
+                    className={
+                      i == currentStep - 1
+                        ? "underlineBar bar-active"
+                        : "underlineBar"
+                    }
+                  ></span> */}
+                    </>
+                  ) : (
+                    <>
+                      <div className="step-progress">
+                        <div className="step">{i + 1}</div>
+                        {i < steps.length - 1 && (
+                          <div className="progressBar"></div>
+                        )}
+                      </div>
+                      {/* <span
+                    className={
+                      i == currentStep - 1
+                        ? "underlineBar bar-active"
+                        : "underlineBar"
+                    }
+                  ></span> */}
+                    </>
+                  )}
+                  <p className="text-gray-500">{step}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
             <div className="register-form">
               <form className="form-step" onSubmit={handleSubmit}>
                 {/* form 1 */}

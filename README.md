@@ -101,3 +101,10 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
   - fetch city.json đưa vào select cho chỗ chọn thành phố/tỉnh
   - làm mấy cái useEffect, onChange cho những field input còn lại (04/12/2023)
   - cái fetch data của city.json oke r , còn 1 chút dưới phần school,grade và hiện tại chưa làm vụ post dữ liệu lên server nhá (04/12/2023)
+  - trang Account chưa responsive mobile
+  - Sau khi lưu thông tin user thành công --> update lại storedUserData ở session vì mỗi khi load lại trang là sẽ lấy lại session đó nếu session có tồn tại để tránh request tới server nữa --> Vậy thì solution nên là xóa session sau khi update là hợp lý :D
+  - xem xét lại việc nó nên hiện câu hỏi bảo mật, chỉ giấu câu trả lời bảo mật
+  - còn vụ set thông báo sau khi thành công update nữa
+  - update password, profile (be và fe ổn rồi) chỉ còn thiếu set thông báo như trên tí.
+  - 06/12/2023: truyền thông tin đóng mở modal từ parent qa cho con thay vì set ở con (done)
+  - 06/12/2023: responsive cho trang account tạm oke (done)

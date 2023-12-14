@@ -40,14 +40,27 @@ a:-webkit-any-link {
   --dangerColorLight: rgb(192, 75, 75);
   --warningColor: orange;
   --warningColorLight: rgb(253, 189, 71);
-  --cancelColor: rgb(173, 170, 170);
+  --cancelColor: rgb(122, 121, 121);
+  --cancelColorLight: rgb(187, 187, 187);
   --grayColor: rgb(114, 113, 113); 
   --darkColor: #222;
+  --whiteColor: rgb(237, 235, 235);
   --nightColor: #3F4D68;
   --nightTextColor: #1EAEE4;
 }
 
 /* let btn in main.css of login folder --> be primary btn */
+.input{
+  color: var(--mainColor);
+  width: var(--inputWidth);
+  margin: 10px 0px;
+  padding: 12px 20px;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  background: rgba(230,230,230,0.8);
+  outline: none;
+}
 
 .btn {
   width: fit-content;
@@ -143,6 +156,13 @@ a:-webkit-any-link {
     background-color: var(--dangerColorLight);
   }
 
+  .cancel-btn {
+    background-color: var(--cancelColor);
+  }
+  .cancel-btn:after{
+    background-color: var(--cancelColorLight);
+  }
+
   /* .hidden {
     opacity: 0;
     pointer-events: none;
@@ -159,6 +179,30 @@ a:-webkit-any-link {
   
 button {
   padding: 0.5rem;
+}
+.circle-close-btn {
+  /* background: var(--secondaryColor); */
+  background: none;
+  color: var(--textColor);
+  border: 1px solid var(--textColor);
+  font-size: 2rem;
+  width: 2.2rem;
+  height: 2.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  border-radius: 100rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.circle-close-btn:before {
+  content: '×';
+}
+.circle-close-btn:hover, .circle-close-btn:focus {
+  background: var(--secondaryColor);
+  border-color: var(--secondaryColor);
+  transform: translateY(-.2rem);
 }
 
 li {
@@ -214,6 +258,45 @@ li {
     width: var(--inputWidth);
 }
 
+/* FOR RESPONSIVE */
+/* Mobile Styles */
+@media only screen and (max-width: 767px) {
+  /* Your mobile styles go here */
+}
+
+/* Tablet Styles */
+@media only screen and (min-width: 768px) and (max-width: 1023px) {
+  /* Your tablet styles go here */
+}
+
+/* Small Desktop Styles */
+@media only screen and (min-width: 1024px) and (max-width: 1279px) {
+  /* Your small desktop styles go here */
+}
+
+/* Medium Desktop Styles */
+@media only screen and (min-width: 1280px) and (max-width: 1439px) {
+  /* Your medium desktop styles go here */
+}
+
+/* Large Desktop Styles */
+@media only screen and (min-width: 1440px) {
+  /* Your large desktop styles go here */
+}
+
 /* TEST 
  */
+
+
+ /* BLOCKLY css */
+ .blocklyTreeRow{
+  height: 45px;
+  line-height: 45px;
+  margin-bottom: 10px;
+  padding-right: 25px;
+  padding-left: 10px;
+  white-space: nowrap;
+  border-radius: 20px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
  

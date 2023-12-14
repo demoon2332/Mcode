@@ -9,7 +9,6 @@ const Missing = () => {
 
   return (
     <>
-      <LoadingScreen></LoadingScreen>
       <section
         className="not-found-section"
         style={{

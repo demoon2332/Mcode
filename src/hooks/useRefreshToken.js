@@ -13,7 +13,7 @@ const { auth,login } = useAuth();
                 withCredentials: true,
                 headers
             });
-            return response;
+            return response.data.accessToken;
         } catch (error){
             console.log('Error refreshing token: ',error);
             throw error;
