@@ -1,10 +1,9 @@
-import logo from "./logo.svg";
 import "./App.css";
 import React, { useContext, useEffect, useState } from "react";
 import Navbar from "./components/Navbar/Navbar";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import Register from "./components/Register/Register";
-import MainLayout from "./layouts/main";
+// import MainLayout from "./layouts/main";
 import Login from "./components/Login/Login";
 import NotFound from "./components/NotFound/NotFound";
 import Home from "./pages/home/Home";
@@ -115,7 +114,7 @@ function App() {
         </Route> */}
         <Route path="/account" element={<Account />}></Route>
         <Route path="/courses" element={<Course />}></Route>
-        <Route path="/exams/:examId" element={<Exam />}></Route>
+        <Route path="/lessons/:lessonId" element={<Exam />}></Route>
 
 
         {/* <Route element={<RequireAuth allowedRoles={[ROLES.Editor]} />}>

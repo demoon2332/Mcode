@@ -33,7 +33,7 @@ const PWD_URL = "/user/changePassword";
 const Account = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
   const { logout } = useContext(AuthContext);
-  const axios = useAxiosPrivate();
+  const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const [userData, setUserData] = useState();
   const [loading, setLoading] = useState(true);

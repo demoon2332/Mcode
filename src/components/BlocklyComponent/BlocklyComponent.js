@@ -4,6 +4,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import Blockly from "blockly/core";
 import { javascriptGenerator } from "blockly/javascript";
+import { pythonGenerator } from "blockly/python";
+import { phpGenerator } from "blockly/php";
+import { luaGenerator } from "blockly/lua";
+import { dartGenerator } from "blockly/dart";
+
 import locale from "blockly/msg/en";
 import "blockly/blocks";
 
@@ -35,9 +40,45 @@ function BlocklyComponent(props) {
   let primaryWorkspace = useRef();
 
   const generateCode = () => {
-    var code = javascriptGenerator.workspaceToCode(primaryWorkspace.current);
+    var code;
+    if (props.proLanguage) {
+      switch (props.proLanguage) {
+        case "js":
+          break;
+        case "py":
+          code = pythonGenerator.workspaceToCode(primaryWorkspace.current);
+          break;
+        case "php":
+          code = phpGenerator.workspaceToCode(primaryWorkspace.current);
+          break;
+        case "dart":
+          code = dartGenerator.workspaceToCode(primaryWorkspace.current);
+          break;
+        case "lua":
+          code = luaGenerator.workspaceToCode(primaryWorkspace.current);
+          break;
+        default:
+          code = javascriptGenerator.workspaceToCode(primaryWorkspace.current);
+      }
+    } else {
+      code = javascriptGenerator.workspaceToCode(primaryWorkspace.current);
+    }
     console.log(code);
+    console.log("PROPS IS: ");
+    console.log(props);
+    console.log(props.onGenerateCode);
+    if (props.onGenerateCode) {
+      props.onGenerateCode(code);
+    }
   };
+
+  useEffect(() => {
+
+    // make sure that workspace is set up well before generate code
+    if(primaryWorkspace.current)
+      generateCode();
+    console.log("Use Effect pro language in blockly component");
+  }, [props.proLanguage]);
 
   //    useEffect(() => {
   //        const { initialXml, children, ...rest } = props;
@@ -81,18 +122,28 @@ function BlocklyComponent(props) {
         primaryWorkspace.current.dispose();
       }
     };
-  }, [props, blocklyDiv, toolbox, primaryWorkspace]);
+  }, [blocklyDiv, toolbox, primaryWorkspace]);
+  // if add props into dependency array above, this blockly workspace is cleanup and re-render every time parent component change any state
 
   return (
     <React.Fragment>
       <div style={{ height: "100%", width: "100%", position: "relative" }}>
-        <button className="btn" onClick={generateCode} style={{position: "absolute",top: "3px", right: "5px",zIndex: "2"}}>
+        <button
+          className="btn"
+          onClick={generateCode}
+          style={{
+            position: "absolute",
+            top: "3px",
+            right: "15px",
+            zIndex: "2",
+          }}
+        >
           <FontAwesomeIcon icon={faPlay} size={"xl"}></FontAwesomeIcon>
         </button>
         <div
           ref={blocklyDiv}
           id="blocklyDiv"
-          style={{ height: "100%", width: "100%",borderRadius: "20px" }}
+          style={{ height: "100%", width: "100%", borderRadius: "20px" }}
         />
         <div style={{ display: "none" }} ref={toolbox}>
           {props.children}

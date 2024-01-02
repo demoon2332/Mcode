@@ -6,6 +6,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-image: var(--theme);
+  background-repeat: no-repeat;
   background-size: cover;
   background-position: top;
   object-fit: cover;
@@ -126,6 +127,12 @@ a:-webkit-any-link {
   .btn:active {
     border-width: 4px 0 0;
     background: none;
+  }
+
+  .disable-btn {
+    pointer-events: none;
+    cursor: none;
+    
   }
 
   .primary-btn {

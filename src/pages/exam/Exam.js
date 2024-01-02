@@ -5,7 +5,6 @@ import {
   faGear,
   faFileLines,
   faPause,
-  faPlay,
   faLeftLong,
   faRightLong,
 } from "@fortawesome/free-solid-svg-icons";
@@ -21,13 +20,28 @@ import BlocklyComponent, {
 import Modal from "../../components/common/modal/Modal";
 
 import "../../styles/pages/Exam/style.css";
+import Popup from "../../components/common/popup/Popup";
+import { useParams } from 'react-router-dom';
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+
+
+
+
 
 const Exam = () => {
   const navigate = useNavigate();
+  const axiosPrivate = useAxiosPrivate();
   const exitModalContent = (
     <div style={{ display: "flex", flexDirection: "column" }}>
       Bạn có muốn thoát trong khi làm bài, bài làm vẫn tiếp tục tính thời gian
       và kết quả sẽ vẫn lưu đấy.
+    </div>
+  );
+
+  const submitModalContent = (
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      Bạn có muốn nộp bài ngay bây giờ, Bạn sẽ không được chỉnh sửa hay thay đổi
+      nữa đâu.
     </div>
   );
 
@@ -37,6 +51,7 @@ const Exam = () => {
       id: 1,
       question:
         "An có 1 số búp bê. Số búp bê của AN nhiều gấp 3 lần búp bê của Bình. Bình có 5 búp bê. Hỏi cả hai bạn có bao nhiêu búp bê?",
+      answer: "",
     },
     {
       index: 1,
@@ -205,10 +220,38 @@ const Exam = () => {
   ];
 
   const [showExitModal, setShowExitModal] = useState(false);
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
   const [showQuestions, setShowQuestions] = useState(true);
   const [showCode, setShowCode] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(questionsList[0]);
+  const [currentAnswer, setCurrentAnswer] = useState("");
+  const [generateCode, setGenerateCode] = useState("");
+  const [proLanguage, setProLanguage] = useState("");
   const timestamp = 1791847648569;
+  
+  const {lessonId} = useParams();
+
+
+
+  
+
+  useEffect(() => {
+    const fetchData = async () =>{
+      try {
+        // const response = await axiosPrivate.get(`/lesson/${lessonId}`);
+        const response = await axiosPrivate.get("/user/profile");
+        console.log("RESPONSEE:")
+        console.log(response)
+        console.log("Lesson id is: ",lessonId);
+      }
+      catch(err){
+        console.log("Error while fetching lesson: ",err)
+      }
+    }
+    fetchData();
+    console.log("REAPEATTT ???")
+  }, []);
 
   const getTimeRemaining = (targetTime) => {
     const now = new Date().getTime();
@@ -244,22 +287,61 @@ const Exam = () => {
   };
 
   const onClickQuestionItem = (index) => {
+    console.log("Here is the bug");
     setCurrentQuestion(questionsList[index]);
+  };
+
+  const onClickNextBtn = () => {
+    if (currentQuestion.index < questionsList.length) {
+      console.log("before next btn");
+      console.log(currentQuestion);
+      setCurrentQuestion(questionsList[currentQuestion.index + 1]);
+    }
+  };
+  const onClickBackBtn = () => {
+    if (currentQuestion.index > 0) {
+      setCurrentQuestion(questionsList[currentQuestion.index - 1]);
+      console.log(currentQuestion);
+    }
   };
 
   const onConfirmExit = () => {
     navigate("/courses");
   };
 
-  // vấn đề ở đây là nó re-render cái này mà sao cái blockly nó cũng bị render lại --> fix gấp :>
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     setTimeLeft(getTimeRemaining(timestamp));
-  //   }, 1000);
+  const onConfirmSubmit = () => {
+    navigate("/courses");
+  };
 
-  //   // Cleanup the interval on component unmount
-  //   return () => clearInterval(intervalId);
-  // });
+  const handleGenerateCode = (code) => {
+    setGenerateCode(code);
+    handleSetAnswer(code);
+  };
+
+  const handleSetAnswer = (code) => {
+    try {
+      const f = new Function(code);
+      const ans = f();
+      // if(ans){
+      //   setCurrentAnswer(ans);
+      // }
+      setCurrentAnswer(ans);
+    } catch (err) {
+      setCurrentAnswer("NaN...");
+      questionsList[currentAnswer.index].answer = "NaN...";
+      console.error("Error executing code: ", err);
+    }
+  };
+
+  // vấn đề ở đây là nó re-render cái này mà sao cái blockly nó cũng bị render lại --> fix gấp :>
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setTimeLeft(getTimeRemaining(timestamp));
+    }, 1000);
+
+    // Cleanup the interval on component unmount
+    return () => clearInterval(intervalId);
+  }, [timestamp]);
 
   const blocklyWorkSpace = (
     <>
@@ -272,6 +354,17 @@ const Exam = () => {
           drag: true,
           wheel: true,
         }}
+        zoom={{
+          controls: true,
+          wheel: true,
+          startScale: 1.0,
+          maxScale: 3,
+          minScale: 0.3,
+          scaleSpeed: 1.2,
+          pinch: true,
+        }}
+        onGenerateCode={handleGenerateCode}
+        proLanguage={proLanguage}
         //         initialXml={`
         // <xml xmlns="http://www.w3.org/1999/xhtml">
         // <block type="controls_ifelse" x="0" y="0"></block>
@@ -295,6 +388,7 @@ const Exam = () => {
             </Value>
           </Block>
         </Category>
+        <Category name="Math" colour="%{BKY_MATH_HUE}"></Category>
         <Block type="text_charAt">
           <Value name="VALUE">
             <Block type="variables_get">
@@ -310,14 +404,21 @@ const Exam = () => {
   return (
     <>
       <div id="exam-section-header">
-        <div style={{ display: "flex", gap: "15px", width: "100%" }}>
-          <div>
+        <div
+          style={{
+            display: "flex",
+            gap: "35px",
+            marginLeft: "15px",
+            width: "100%",
+          }}
+        >
+          <div style={{ cursor: "pointer" }}>
             <span style={{ marginRight: "8px" }}>
               <FontAwesomeIcon icon={faFileLines} />
             </span>
             <span>Tệp</span>
           </div>
-          <div>
+          <div style={{ cursor: "pointer" }}>
             <span style={{ marginRight: "8px" }}>
               <FontAwesomeIcon icon={faGear} />
             </span>
@@ -337,7 +438,13 @@ const Exam = () => {
       <div id="exam-section-body">
         <div id="exam-s-b-header">
           <div>
-            <button className="btn success-btn">
+            <button
+              className="btn success-btn"
+              onClick={() => {
+                // setShowSubmitModal(true);
+                setShowPopup(true);
+              }}
+            >
               <span style={{ marginRight: "8px" }}>
                 {" "}
                 <FontAwesomeIcon icon={faPaperPlane} />
@@ -399,13 +506,21 @@ const Exam = () => {
                   </span>
                   <span>Tạm dừng</span>
                 </button>
-                <button className="btn">
+                <button
+                  className={`btn ${currentQuestion.index === 0 ? "" : ""}`}
+                  onClick={onClickBackBtn}
+                >
                   <FontAwesomeIcon
                     icon={faLeftLong}
                     size={"xl"}
                   ></FontAwesomeIcon>
                 </button>
-                <button className="btn">
+                <button
+                  className={`btn ${
+                    currentQuestion.index === questionsList.length ? "" : ""
+                  }`}
+                  onClick={onClickNextBtn}
+                >
                   <FontAwesomeIcon
                     icon={faRightLong}
                     size={"xl"}
@@ -450,13 +565,40 @@ const Exam = () => {
                             currentQuestion.index === q.index ? "selected" : ""
                           }`}
                         >
-                          <b>{q.id}.</b>
+                          <b>
+                            {q.id}.{" "}
+                            {q.answer?.length > 4
+                              ? `${q.answer.slice(0, 4)}...`
+                              : q.answer}
+                          </b>
                         </div>
                       ))}
                     </div>
                   </div>
                 )}
-                {showCode && <div id="code-panel">Code Panel</div>}
+                {showCode && (
+                  <div id="code-panel">
+                    <select
+                      style={{ width: "50%" }}
+                      id="pro_language"
+                      value={proLanguage}
+                      onChange={(e) => setProLanguage(e.target.value)}
+                      required
+                      // aria-invalid={validGender ? "false" : "true"}
+                      // aria-describedby="genderNote"
+                      // onFocus={() => setGenderFocus(true)}
+                      // onBlur={() => setGenderFocus(false)}
+                    >
+                      <option value={"js"}>javascript</option>
+                      <option value={"py"}>Python</option>
+                      <option value={"php"}>PHP</option>
+                      <option value={"dart"}>Dart</option>
+                      <option value={"lua"}>Lua</option>
+                    </select>
+                    {/* using pre tag to keep the previous (original) format of the paragraph/code */}
+                    <pre style={{ padding: "5px 10px" }}>{generateCode}</pre>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -479,6 +621,23 @@ const Exam = () => {
       >
         {exitModalContent}
       </Modal>
+
+      <Modal
+        isVisible={showSubmitModal}
+        setIsVisible={setShowSubmitModal}
+        title={"Submit confirm"}
+        onYes={onConfirmSubmit}
+      >
+        {submitModalContent}
+      </Modal>
+
+      <Popup
+      isVisible={showPopup}
+      setIsVisible={setShowPopup}
+      title={"Submit success"}
+      type={"success"}>
+
+      </Popup>
     </>
   );
 };

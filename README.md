@@ -108,3 +108,10 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
   - update password, profile (be và fe ổn rồi) chỉ còn thiếu set thông báo như trên tí.
   - 06/12/2023: truyền thông tin đóng mở modal từ parent qa cho con thay vì set ở con (done)
   - 06/12/2023: responsive cho trang account tạm oke (done)
+  - 15/12/2023: trang exam/:examId còn thiếu bắn đáp án tới ô đáp án (dưới dạng đáp án ngắn nếu như đáp án dài qá), còn đáp án hiện bên trên
+  - thư viện blockly đg có vấn đề nên cứ hiện lỗi warning ko tìm thấy direction (https://github.com/google/blockly/issues/7124)
+  - 15/12/2023: onClickBackBtn, onClickNextBtn vì index là xuất phát từ 0
+  - 18/12/2023: hôm nay done xong component Popup (thay thế cho cái dialog trước đây)
+  - 24/12/2023: code BE side,
+  - 25/12/2023: config socket (using socket.io) in BE side
+  - 2/1/2023: install swiper to use slide in courses page
